@@ -1,3 +1,7 @@
+//Add java docs
+//Add comments where appropriate
+//Change names on lines commented //**
+
 package uk.ac.standrews.cs5031;
 
 import java.io.*;

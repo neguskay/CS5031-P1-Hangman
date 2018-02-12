@@ -1,18 +1,22 @@
+//Add java docs
+//Add comments where appropriate
+//Change names on lines commented //**
+
 package uk.ac.standrews.cs5031;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GameState {
-    public String word;
-    public int g;
-    public int wrong;
-    public int h;
+    public String word; //change to suitable name
+    public int g;       //what is g? change to suitable name
+    public int wrong;       //**
+    public int h;       //**
 
     ArrayList<Character> got;
     ArrayList<Character> not;
 
-    public Scanner sc = new Scanner(System.in).useDelimiter("\n");
+    public Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
     public GameState(String target, int g, int h) {
         this.word = target;
@@ -48,7 +52,7 @@ public class GameState {
 
         System.out.print("Guess a letter or word (? for a hint): ");
 
-        String str = sc.next().toLowerCase();
+        String str = scanner.next().toLowerCase();
 
         if (str.length() > 1) {
             if (str==word) {

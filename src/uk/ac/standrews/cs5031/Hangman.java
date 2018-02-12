@@ -1,45 +1,53 @@
+//Add java docs
+//Add comments where appropriate
+//Change names on lines commented //**
+
+//Changed variable names
+//Changed scanner
+
 package uk.ac.standrews.cs5031;
 
 import java.util.Scanner;
 
 public class Hangman {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        GameState game; CommandOpts opts;
-        boolean correct;
 
-        opts = new CommandOpts(args);
+        String[] UserInput = args;      //Stores User Inputs
 
-        if (opts.wordsource == "") {
+        boolean isCorrect;      //
 
-            System.out.println("  1. Counties");
-            System.out.println("  2. Countries");
-            System.out.println("  3. Cities");
+        Scanner scanner = new Scanner(System.in);
+        CommandOpts commandOpts = new CommandOpts(UserInput);       //Once User Input value is set, parse as variable
+        GameState gameState;
 
-            System.out.print("Pick a category:");
 
-            game = new GameState(Words.randomWord(sc.nextInt()), opts.maxguesses, opts.maxhints);
+        if (commandOpts.WordSource == "") {
+            commandOpts.printWelcomeMessage();  //Print Welcome Message
+
+            gameState = new GameState(Words.randomWord(scanner.nextInt()), commandOpts.MaxGuesses, commandOpts.MaxHints); //Change game state with new chosen character
         }
         else {
-            game = new GameState(Words.randomWord(opts.wordsource), opts.maxguesses, opts.maxhints);
+            gameState = new GameState(Words.randomWord(commandOpts.WordSource), commandOpts.MaxGuesses, commandOpts.MaxHints);
         }
 
-        while(!game.won() && !game.lost()) {
-            game.showWord();
+        while(!gameState.won() && !gameState.lost()) {
+            gameState.showWord();
 
-            System.out.println("Guesses remaining: " + game.wrong);
+            System.out.println("Guesses remaining: " + gameState.wrong);
 
-            correct = game.guessLetter();
+            isCorrect = gameState.guessLetter();       //change game/correct
 
-            if (correct) System.out.println("Good guess!");
-            if (!correct) System.out.println("Wrong guess!");
+            if (isCorrect) System.out.println("Good guess!"); //change correct
+            if (!isCorrect) System.out.println("Wrong guess!");       //change correct
         }
 
-        if (game.won()) {
+        if (gameState.won()) {
             System.out.println("Well done!");
-            System.out.println("You took " + game.g + " guesses");
+            System.out.println("You took " + gameState.g + " guesses");      //What is g? change to something legible when found
         } else {
-            System.out.println("You lost! The word was " + game.word);
+            System.out.println("You lost! The word was " + gameState.word);
         }
     }
+
+
 }
