@@ -7,7 +7,7 @@ public class CommandOpts {
     public int MaxGuesses;      //Maximum number of guesses
     public int MaxHints;        //Maximum number of hints
 
-    String WordSource;          //Format name
+    String WordSource;          //File Name
 
     CommandOpts(String[] args) {
         MaxGuesses = 10;        //**
@@ -34,7 +34,7 @@ public class CommandOpts {
 
     /**
      * Prints the initial welcome message for the game and instructions
-     * To be refactored to a more appropriate class
+     * --To be refactored to a more appropriate class
      */
     public void printWelcomeMessage(){
         System.out.println("WELCOME TO HANGMAN");

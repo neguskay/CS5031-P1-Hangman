@@ -9,36 +9,46 @@ import java.util.ArrayList;
 
 public class Words {
 
-    static String[] words1 = { "Argyll and Bute", "Caithness",  "Kingdom of Fife",
+    static String[] Counties = { "Argyll and Bute", "Caithness",  "Kingdom of Fife",
             "East Lothian", "Highland", "Dumfries and Galloway",
             "Renfrewshire", "Scottish Borders", "Perth and Kinross" };
-    static String[] words2 = { "Scotland", "England", "Wales", "Northern Ireland", "Ireland",
+    static String[] Countries = { "Scotland", "England", "Wales", "Northern Ireland", "Ireland",
             "France", "Germany", "Netherlands", "Spain", "Portugal",
             "Belgium", "Luxembourg", "Switzerland", "Italy", "Greece" };
-    static String[] words3 = { "St Andrews", "Edinburgh", "Glasgow", "Kirkcaldy", "Perth",
+    static String[] Cities = { "St Andrews", "Edinburgh", "Glasgow", "Kirkcaldy", "Perth",
             "Dundee", "Stirling", "Inverness", "Aberdeen", "Falkirk" };
 
-    static ArrayList<String> customwords;
+    static ArrayList<String> CustomWords;
 
-    public static String randomWord(int category) {
+    /**
+     *
+     * @param category User-chosen category i.e Countries, Counties or Cities
+     * @return Array of Words
+     */
+    public static String getWordFromCategory(int category) {
         if (category == 1)
-            return words1[(int)(Math.random()*9)];
+            return Counties[(int)(Math.random()*9)];
         if (category == 2)
-            return words2[(int)(Math.random()*15)];
-        return words3[(int)(Math.random()*10)];
+            return Countries[(int)(Math.random()*15)];
+        return Cities[(int)(Math.random()*10)];
     }
 
-    public static String randomWord(String wordsource) {
+    /**
+     *
+     * @param FileName filename for new Custom word sources
+     * @return CustomWords - Array List
+     */
+    public static String getWordFromFile(String FileName) {
         String line;
-        customwords = new ArrayList<String>();
+        CustomWords = new ArrayList<String>();
 
         try {
-            FileReader file = new FileReader(wordsource);
+            FileReader file = new FileReader(FileName);
             BufferedReader reader = new BufferedReader(file);
             while((line = reader.readLine()) != null) {
-                customwords.add(line);
+                CustomWords.add(line);
             }
-            return customwords.get((int)(Math.random()*customwords.size()));
+            return CustomWords.get((int)(Math.random()*CustomWords.size()));
         } catch(FileNotFoundException e) {
             System.out.println("File error");
             return "";

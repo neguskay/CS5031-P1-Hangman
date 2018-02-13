@@ -8,36 +8,37 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GameState {
-    public String word; //change to suitable name
-    public int g;       //what is g? change to suitable name
-    public int wrong;       //**
-    public int h;       //**
+    public String RandomWord;
 
-    ArrayList<Character> got;
-    ArrayList<Character> not;
+    public int MadeGuesses;       //what is g? change to suitable name
+    public int RemainingGuesses;       //**
+    public int RemainingHints;       //**
+
+    ArrayList<Character> GuessedChars;
+    ArrayList<Character> MissGuessedChars;
 
     public Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
-    public GameState(String target, int g, int h) {
-        this.word = target;
-        not = new ArrayList<Character>();
-        got = new ArrayList<Character>();
+    public GameState(String ChosenRandomWord, int RemGuesses, int RemHints) {
+        this.RandomWord = ChosenRandomWord;
+        MissGuessedChars = new ArrayList<Character>();
+        GuessedChars = new ArrayList<Character>();
 
-        for(int i = 0; i < target.length(); ++i) {
-            if (!not.contains(Character.toLowerCase(target.charAt(i))))
-                not.add(Character.toLowerCase(target.charAt(i)));
+        for(int i = 0; i < ChosenRandomWord.length(); ++i) {
+            if (!MissGuessedChars.contains(Character.toLowerCase(ChosenRandomWord.charAt(i))))
+                MissGuessedChars.add(Character.toLowerCase(ChosenRandomWord.charAt(i)));
         }
-        //System.out.println(missing);
 
-        this.g = 0;
-        wrong = g;
-        this.h = h;
+
+        this.MadeGuesses = 0;
+        RemainingGuesses = RemGuesses;
+        this.RemainingHints = RemHints;
     }
 
     void showWord() {
-        for (int i = 0; i < word.length(); ++i) {
-            if (got.contains(word.charAt(i))) {
-                System.out.print(word.charAt(i));
+        for (int i = 0; i < RandomWord.length(); ++i) {
+            if (GuessedChars.contains(RandomWord.charAt(i))) {
+                System.out.print(RandomWord.charAt(i));
             } else {
                 System.out.print("-");
             }
@@ -46,56 +47,58 @@ public class GameState {
         // System.out.println(missing);
     }
 
-    boolean guessLetter() {
-        int i;
-        char letter;
+    boolean getNextGuess() {
+        //int i;
+        char GuessedChar;
 
         System.out.print("Guess a letter or word (? for a hint): ");
 
-        String str = scanner.next().toLowerCase();
+        String GuessedStream = scanner.next().toLowerCase();      //Potential bug, will only check for Lower Case characters
 
-        if (str.length() > 1) {
-            if (str==word) {
-                not.clear();
+        //System.out.println(GuessedStream);
+
+        if (GuessedStream.length() > 1) {
+            if (GuessedStream==RandomWord) {
+                MissGuessedChars.clear();
                 return true;
             } else return false;
         }
 
-        letter = str.charAt(0);
+        GuessedChar = GuessedStream.charAt(0);
 
-        if (letter == '?') {
-            hint();
+        if (GuessedChar == '?') {
+            getHint();
             return false;
         }
 
-        for(i = 0; i < not.size(); ++i) { // Loop over the not got
-            if (not.get(i) == letter) {
-                not.remove(i);
-                got.add(letter);
-                g++;
+        for(int i = 0; i < MissGuessedChars.size(); ++i) { // Loop over the not got
+            if (MissGuessedChars.get(i) == GuessedChar) {
+                MissGuessedChars.remove(i);
+                GuessedChars.add(GuessedChar);
+                MadeGuesses++;
                 return true;
             }
         }
 
-        g++; // One more guess
-        wrong--;
+        MadeGuesses++; // One more guess - Increment guesses made
+        RemainingGuesses--;    // Decrease guesses remaining
         return false;
     }
 
-    boolean won() {
-        if (not.size() == 0) return true; else return false;
+    boolean isGameWon() {
+        if (MissGuessedChars.size() == 0) return true; else return false;
     }
 
-    boolean lost() {
-        if (not.size() > 0 && wrong == 0) return true; else return false;
+    boolean isGameLost() {
+        if (MissGuessedChars.size() > 0 && RemainingGuesses == 0) return true; else return false;
     }
 
-    void hint() {
-        if (h == 0) {
+    void getHint() {
+        if (RemainingHints == 0) {
             System.out.println("No more hints allowed");
         }
 
         System.out.print("Try: ");
-        System.out.println(not.get((int)(Math.random()*not.size())));
+        System.out.println(MissGuessedChars.get((int)(Math.random()*MissGuessedChars.size())));
     }
 }
