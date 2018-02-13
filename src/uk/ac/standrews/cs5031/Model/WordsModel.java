@@ -1,13 +1,19 @@
+package uk.ac.standrews.cs5031.Model;
+
 //Add java docs
 //Add comments where appropriate
 //Change names on lines commented //**
 
-package uk.ac.standrews.cs5031;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import java.io.*;
 import java.util.ArrayList;
 
-public class Words {
+public class WordsModel {
 
     static String[] Counties = { "Argyll and Bute", "Caithness",  "Kingdom of Fife",
             "East Lothian", "Highland", "Dumfries and Galloway",
