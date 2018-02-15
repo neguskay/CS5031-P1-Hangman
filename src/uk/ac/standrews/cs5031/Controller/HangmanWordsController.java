@@ -1,25 +1,31 @@
-package uk.ac.standrews.cs5031.Model;
+package uk.ac.standrews.cs5031.Controller;
 
+import uk.ac.standrews.cs5031.Model.HangmanModel;
+
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
-public interface HangmanModInterface {
+public class HangmanWordsController {
+
+    String[] Countries;
+    String[] Counties;
+    String[] Cities;
+    ArrayList<String> CustomWords = new ArrayList<String>();
+
+
     HangmanModel hangmanmodel = new HangmanModel();
 
-    String[] Countries = hangmanmodel.getCountries();
-    String[] Counties = hangmanmodel.getCounties();
-    String[] Cities = hangmanmodel.getCities();
-    ArrayList<String> CustomWords = hangmanmodel.getCustomWords();
+    public HangmanWordsController(){
+        this.Countries = hangmanmodel.getCountries();
+        this.Counties = hangmanmodel.getCounties();
+        this.Cities= hangmanmodel.getCities();
+        this.CustomWords = hangmanmodel.getCustomWords();
+    }
 
-    /**
-     *
-     * @param category User-chosen category i.e Countries, Counties or Cities
-     * @return Array of Words
-     */
-    static String getWordFromCategory(int category) {
+    public  String getWordFromCategory(int category) {
         if (category == 1)
             return Counties[(int)(Math.random()*9)];
         if (category == 2)
@@ -27,7 +33,7 @@ public interface HangmanModInterface {
         return Cities[(int)(Math.random()*10)];
     }
 
-    static String getWordFromFile(String FileName) {
+    public String getWordFromFile(String FileName) {
         String line;
 
         try {

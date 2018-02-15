@@ -3,7 +3,7 @@ package uk.ac.standrews.cs5031.Controller;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class HangmanController {
+public class HangmanGameplayController {
     public String RandomWord;
 
     public int MadeGuesses;       //what is g? change to suitable name
@@ -15,8 +15,9 @@ public class HangmanController {
 
     public Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
-    public HangmanController(String ChosenRandomWord, int RemGuesses, int RemHints) {
+    public HangmanGameplayController(String ChosenRandomWord, int RemGuesses, int RemHints) {
         this.RandomWord = ChosenRandomWord;
+
         MissGuessedChars = new ArrayList<Character>();
         GuessedChars = new ArrayList<Character>();
 
@@ -31,6 +32,8 @@ public class HangmanController {
         this.RemainingHints = RemHints;
     }
 
+
+
     public void showWord() {
         for (int i = 0; i < RandomWord.length(); ++i) {
             if (GuessedChars.contains(RandomWord.charAt(i))) {
@@ -40,18 +43,18 @@ public class HangmanController {
             }
         }
         System.out.println("");
-        // System.out.println(missing);
+
     }
 
     public boolean getNextGuess() {
-        //int i;
+
         char GuessedChar;
 
         System.out.print("Guess a letter or word (? for a hint): ");
 
         String GuessedStream = scanner.next().toLowerCase();      //Potential bug, will only check for Lower Case characters
 
-        //System.out.println(GuessedStream);
+
 
         if (GuessedStream.length() > 1) {
             if (GuessedStream==RandomWord) {
@@ -97,7 +100,6 @@ public class HangmanController {
         System.out.print("Try: ");
         System.out.println(MissGuessedChars.get((int)(Math.random()*MissGuessedChars.size())));
     }
-
 
 
 }

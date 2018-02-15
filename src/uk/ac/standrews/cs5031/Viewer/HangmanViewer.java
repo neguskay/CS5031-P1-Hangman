@@ -1,9 +1,9 @@
 package uk.ac.standrews.cs5031.Viewer;
 
 import uk.ac.standrews.cs5031.Controller.CommandOpts;
-import uk.ac.standrews.cs5031.Controller.HangmanController;
-import uk.ac.standrews.cs5031.Model.HangmanModInterface;
-import uk.ac.standrews.cs5031.Model.HangmanModel;
+import uk.ac.standrews.cs5031.Controller.HangmanGameplayController;
+import uk.ac.standrews.cs5031.Controller.HangmanWordsController;
+
 
 import java.util.Scanner;
 
@@ -18,35 +18,36 @@ public class HangmanViewer {
 
         CommandOpts commandOpts = new CommandOpts(UserInput);       //Once User Input value is set, parse as variable
 
-        HangmanController hangmanController;
+        HangmanWordsController WController = new HangmanWordsController();
+        HangmanGameplayController GController;
 
 
 
         if (commandOpts.WordSource == "") {
             printWelcomeMessage();  //Print Welcome Message
 
-            hangmanController = new HangmanController(HangmanModInterface.getWordFromCategory(scanner.nextInt()), commandOpts.MaxGuesses, commandOpts.MaxHints); //Change game state with new chosen character
+            GController = new HangmanGameplayController(WController.getWordFromCategory(scanner.nextInt()), commandOpts.MaxGuesses, commandOpts.MaxHints); //Change game state with new chosen character
         }
         else {
-            hangmanController = new HangmanController(HangmanModInterface.getWordFromFile(commandOpts.WordSource), commandOpts.MaxGuesses, commandOpts.MaxHints);
+            GController = new HangmanGameplayController(WController.getWordFromFile(commandOpts.WordSource), commandOpts.MaxGuesses, commandOpts.MaxHints);
         }
 
-        while(!hangmanController.isGameWon() && !hangmanController.isGameLost()) {
-            hangmanController.showWord();
+        while(!GController.isGameWon() && !GController.isGameLost()) {
+            GController.showWord();
 
-            System.out.println("Guesses remaining: " + hangmanController.RemainingGuesses);
+            System.out.println("Guesses remaining: " + GController.RemainingGuesses);
 
-            isCorrect = hangmanController.getNextGuess();       //change game/correct
+            isCorrect = GController.getNextGuess();       //change game/correct
 
             if (isCorrect) System.out.println("Good guess!"); //change correct
             if (!isCorrect) System.out.println("Wrong guess!");       //change correct
         }
 
-        if (hangmanController.isGameWon()) {
+        if (GController.isGameWon()) {
             System.out.println("Well done!");
-            System.out.println("You took " + hangmanController.MadeGuesses + " guesses");      //What is g? change to something legible when found
+            System.out.println("You took " + GController.MadeGuesses + " guesses");      //What is g? change to something legible when found
         } else {
-            System.out.println("You lost! The word was " + hangmanController.RandomWord);
+            System.out.println("You lost! The word was " + GController.RandomWord);
         }
     }
 

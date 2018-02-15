@@ -1,9 +1,6 @@
 package uk.ac.standrews.cs5031.Model;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+
 import java.util.ArrayList;
 
 public class HangmanModel {
