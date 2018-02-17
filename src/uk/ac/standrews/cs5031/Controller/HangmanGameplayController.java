@@ -15,7 +15,7 @@ public class HangmanGameplayController {
 
     public Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
-    public HangmanGameplayController(String ChosenRandomWord, int RemGuesses, int RemHints) {
+    public HangmanGameplayController(String ChosenRandomWord) {
         this.RandomWord = ChosenRandomWord;
 
         MissGuessedChars = new ArrayList<Character>();
@@ -28,8 +28,8 @@ public class HangmanGameplayController {
 
 
         this.MadeGuesses = 0;
-        RemainingGuesses = RemGuesses;
-        this.RemainingHints = RemHints;
+        RemainingGuesses = 5;
+        this.RemainingHints = 3;
     }
 
 
@@ -47,14 +47,9 @@ public class HangmanGameplayController {
     }
 
     public boolean getNextGuess() {
-
         char GuessedChar;
-
         System.out.print("Guess a letter or word (? for a hint): ");
-
         String GuessedStream = scanner.next().toLowerCase();      //Potential bug, will only check for Lower Case characters
-
-
 
         if (GuessedStream.length() > 1) {
             if (GuessedStream==RandomWord) {

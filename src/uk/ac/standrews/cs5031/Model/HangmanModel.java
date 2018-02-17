@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs5031.Model;
 
-
 import java.util.ArrayList;
 
 public class HangmanModel {

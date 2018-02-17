@@ -26,6 +26,10 @@ public class HangmanWordsController {
     }
 
     public  String getWordFromCategory(int category) {
+        System.out.println();
+        System.out.println("START");
+        System.out.println();
+
         if (category == 1)
             return Counties[(int)(Math.random()*9)];
         if (category == 2)
@@ -45,9 +49,11 @@ public class HangmanWordsController {
             return CustomWords.get((int)(Math.random()*CustomWords.size()));
         } catch(FileNotFoundException e) {
             System.out.println("File error");
+            System.out.println("File Was Not Found");
             return "";
         } catch(IOException e) {
             System.out.println("IO error");
+            System.out.println("File Invalid");
             return "";
         }
     }
