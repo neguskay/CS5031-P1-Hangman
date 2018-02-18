@@ -3,7 +3,7 @@ package uk.ac.standrews.cs5031.Controller;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class HangmanGameplayController {
+public class HangmanGameplayController implements GameplayControllerInterface{
     public String RandomWord;
 
     public int MadeGuesses;       //what is g? change to suitable name
@@ -13,7 +13,7 @@ public class HangmanGameplayController {
     ArrayList<Character> GuessedChars;
     ArrayList<Character> MissGuessedChars;
 
-    public Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+    private Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
     public HangmanGameplayController(String ChosenRandomWord) {
         this.RandomWord = ChosenRandomWord;
@@ -46,7 +46,7 @@ public class HangmanGameplayController {
 
     }
 
-    public boolean getNextGuess() {
+    public boolean getNextGuess() {///inspect and refactor, makes no sense
         char GuessedChar;
         System.out.print("Guess a letter or word (? for a hint): ");
         String GuessedStream = scanner.next().toLowerCase();      //Potential bug, will only check for Lower Case characters

@@ -1,7 +1,7 @@
 //This class was downloaded from the University of St. Andrews Student's Resources Website
 // Source: https://studres.cs.st-andrews.ac.uk/Library/Charatan,2001/JavaClasses/EasyIn.java
 
-package uk.ac.standrews.cs5031;
+package uk.ac.standrews.cs5031.External;
 //package javaclasses;
 
 import java.io.*;

@@ -9,8 +9,9 @@
 //Changed scanner
 */
 
-package uk.ac.standrews.cs5031;
+package uk.ac.standrews.cs5031.HangmanMain;
 
+import uk.ac.standrews.cs5031.Viewer.HangmanGUI;
 import uk.ac.standrews.cs5031.Viewer.HangmanViewer;
 
 import java.util.Scanner;
@@ -19,7 +20,8 @@ public class Hangman {
 
     public static void main(String[] args){
 
-        new HangmanViewer(args);
+        //new HangmanViewer();
+        new HangmanGUI();
     }
 
 }
