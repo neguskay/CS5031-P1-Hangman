@@ -23,97 +23,95 @@ public class HangmanGUI implements Observer, ActionListener{
     private JPanel controlPanel;
     private JPanel viewPanel;
 
-    private static int DEFAULT_FRAME_WIDTH = 400;
-    private static int DEFAULT_FRAME_HEIGHT = 500;
+    private static int DEFAULT_FRAME_WIDTH = 300;
+    private static int DEFAULT_FRAME_HEIGHT = 300;
+    private static int DEFAULT_BUTTON_WIDTH = 100;
+    private static int DEFAULT_BUTTON_HEIGHT = 20;
+    private static int DEFAULT_TEXT_AREA_WIDTH = 100;
+    private static int DEFAULT_TEXT_AREA_HEIGHT = 50;
 
     protected static String BUTTON_NEW_GAME_COMMAND = "New Game";
-    protected static String BUTTON_HINT_COMMAND = "Hint ?";
-    protected static String BUTTON_ADVANCE_COMMAND= "SUBMIT";
-    protected static String BUTTON_DEFAULT_SOURCE_COMMAND = "DEFAULT";
-    protected static String BUTTON_CUSTOM_SOURCE_COMMAND = "CUSTOM";
-    protected static String BUTTON_SELECT_AND_UPLOAD_COMMAND = "CHOOSE FILE";
+    protected static String BUTTON_INFO_COMMAND = "Hint and Help";
 
-    protected static String[] DefaultCategories = {"COUNTIES","COUNTRIES","CITIES"};
 
-    private JButton newGameButton;
-    private JButton hintButton;
-    private JButton advanceButton;
-    private JButton chooseFileButton;
-    private JButton customSourceButton;
-    private JButton defaultSourceButton;
+    protected static String BUTTON_FEEDBACK = "BUTTON PRESSED: ";
 
-    private JTextField inputCharacterField;
-    private JTextField outputViewField;
+    private JButton newGameButton = new JButton(BUTTON_NEW_GAME_COMMAND);
+    private JButton infoButton = new JButton(BUTTON_INFO_COMMAND);
+
+    private JTextField inputCharacterField = new JTextField("input");
+    private JTextField outputViewField = new JTextField("output");
+
+    private Container welcomeGrid = new Container();
+    private Container textGrid = new Container();
 
 
     public HangmanGUI(){
         this.model = new HangmanModel();
 
         hangmanFrame = new JFrame("HANGMAN");
+        hangmanFrame.setLayout(new BorderLayout());
         hangmanFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         hangmanFrame.setSize(DEFAULT_FRAME_WIDTH,DEFAULT_FRAME_HEIGHT);
+
         hangmanFrame.setVisible(true);
 
         controlPanel = new JPanel();
         viewPanel = new JPanel();
 
-        hangmanFrame.getContentPane().add(controlPanel, BorderLayout.SOUTH);
-        hangmanFrame.getContentPane().add(viewPanel, BorderLayout.CENTER);
-
-        addControlElements();
-        addViewElements();
-
         addActionListenerForButtons(this);
+
+
+        welcomeGrid.setLayout(new GridLayout(3, 1));
+        welcomeGrid.setSize(100,100);
+
+        textGrid.setLayout(new GridLayout(1, 1));
+        textGrid.setSize(500, 250);
+
+        outputViewField.setVisible(true);
+        outputViewField.setEditable(false);
+
+        inputCharacterField.setVisible(true);
+        inputCharacterField.setEditable(false);
+
+        welcomeGrid.add(newGameButton);
+        welcomeGrid.add(infoButton);
+
+        textGrid.add(outputViewField);
+
+        controlPanel.add(welcomeGrid, BorderLayout.NORTH);
+        viewPanel.add(outputViewField);
+
+        hangmanFrame.add(controlPanel, BorderLayout.NORTH);
+        hangmanFrame.add(outputViewField,BorderLayout.CENTER);
+
         ((Observable)model).addObserver(this);
-
-
     }
 
     private void addActionListenerForButtons(ActionListener actionListener) {
         newGameButton.addActionListener(actionListener);
-        hintButton.addActionListener(actionListener);
-        defaultSourceButton.addActionListener(actionListener);
-        customSourceButton.addActionListener(actionListener);
-        advanceButton.addActionListener(actionListener);
-        chooseFileButton.addActionListener(actionListener);
+        infoButton.addActionListener(actionListener);
     }
 
 
     private void addControlElements(){
-        newGameButton = new JButton(BUTTON_NEW_GAME_COMMAND);
-        hintButton = new JButton(BUTTON_HINT_COMMAND);
-        defaultSourceButton = new JButton(BUTTON_DEFAULT_SOURCE_COMMAND);
-        customSourceButton = new JButton(BUTTON_CUSTOM_SOURCE_COMMAND);
-        advanceButton = new JButton(BUTTON_ADVANCE_COMMAND);
-        chooseFileButton = new JButton(BUTTON_SELECT_AND_UPLOAD_COMMAND);
 
-        controlPanel.add(newGameButton);
-        controlPanel.add(hintButton);
-        controlPanel.add(defaultSourceButton);
-        controlPanel.add(customSourceButton);
-        controlPanel.add(advanceButton);
-        controlPanel.add(chooseFileButton);
     }
 
     private void addViewElements(){
-        inputCharacterField = new JTextField("hmm",10);
-        inputCharacterField.setEditable(true);
-        inputCharacterField.setVisible(true);
-        outputViewField = new JTextField("lol new", 20 );
-        outputViewField.setEditable(false);
-        outputViewField.setVisible(true);
-
-        viewPanel.add(inputCharacterField);
-        viewPanel.add(outputViewField);
 
     }
 
+    private void initNewGame(){
+        hangmanFrame.dispose();
+        new HangmanGamePlayGUI();
+    }
 
     @Override
     public void update(Observable observable, Object object) {
         SwingUtilities.invokeLater(new Runnable(){
             public void run(){
-                outputViewField.setText("skrere");
+                //outputViewField.setText("skrere");
                 hangmanFrame.repaint();
             }
         });
@@ -122,9 +120,13 @@ public class HangmanGUI implements Observer, ActionListener{
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == newGameButton ){
-            outputViewField.setVisible(true);
-            outputViewField.setText("2+2 is 4");
-            System.out.println("New Game Pressed");
+            //outputViewField.setText("2+2 is 4, - 1 that's 3, QUICK MAFS ");
+            initNewGame();
+            System.out.println(BUTTON_FEEDBACK+ newGameButton.getLabel());
+        }
+        else if(actionEvent.getSource() == infoButton){
+            outputViewField.setText("WELCOME TO HANG MAN");
+            System.out.println(BUTTON_FEEDBACK+ infoButton.getLabel());
         }
 
     }

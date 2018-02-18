@@ -20,8 +20,8 @@ public class Hangman {
 
     public static void main(String[] args){
 
-        new HangmanViewer();
-        //new HangmanGUI();
+        //new HangmanViewer();
+        new HangmanGUI();
     }
 
 }
