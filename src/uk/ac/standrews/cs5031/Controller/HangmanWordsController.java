@@ -31,12 +31,17 @@ public class HangmanWordsController{
         System.out.println();
         System.out.println("START");
         System.out.println();
+        String ChosenWord = "";
+        switch (category){
+            case 1: ChosenWord = Counties[(int)(Math.random()*9)];
+                break;
+            case 2: ChosenWord = Countries[(int)(Math.random()*15)];
+                break;
+            case 3: ChosenWord = Cities[(int)(Math.random()*10)];
+                break;
 
-        if (category == 1)
-            return Counties[(int)(Math.random()*9)];
-        if (category == 2)
-            return Countries[(int)(Math.random()*15)];
-        return Cities[(int)(Math.random()*10)];
+        }
+        return ChosenWord;
     }
 
     public String getWordFromFile(String FileName) {

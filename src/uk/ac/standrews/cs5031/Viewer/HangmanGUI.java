@@ -39,8 +39,8 @@ public class HangmanGUI implements Observer, ActionListener{
     private JButton newGameButton = new JButton(BUTTON_NEW_GAME_COMMAND);
     private JButton infoButton = new JButton(BUTTON_INFO_COMMAND);
 
-    private JTextField inputCharacterField = new JTextField("input");
-    private JTextField outputViewField = new JTextField("output");
+    private JTextField inputCharacterField = new JTextField("");
+    private JTextField outputViewField = new JTextField("");
 
     private Container welcomeGrid = new Container();
     private Container textGrid = new Container();

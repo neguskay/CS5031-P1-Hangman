@@ -6,4 +6,13 @@ public interface GameplayControllerInterface {
     boolean isGameWon();
     boolean isGameLost();
     void getHint();
+
+    String showWordGUI();
+    boolean getNextGuessGUI(char UserChar);
+    boolean isGameWonGUI();
+    boolean isGameLostGUI();
+    void getHintGUI();
+
+    int getRemainingGuessesGUI();
+
 }

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs5031.Viewer;
 
+import uk.ac.standrews.cs5031.Controller.GameplayControllerInterface;
 import uk.ac.standrews.cs5031.Controller.HangmanGameplayController;
 import uk.ac.standrews.cs5031.Controller.HangmanWordsController;
 import uk.ac.standrews.cs5031.Model.HangmanModel;
@@ -15,13 +16,10 @@ import java.util.Observer;
 public class HangmanGamePlayGUI implements Observer, ActionListener {
 
     private HangmanModelInterface model;
-    private HangmanWordsController wController;
-    private HangmanGameplayController gController;
-    private HangmanViewer viewer;
+    private HangmanWordsController wController = new HangmanWordsController();
+    private GameplayControllerInterface gController;
 
     private JFrame gameFrame;
-    private JPanel controlPanel;
-    private JPanel viewPanel;
 
     private static int DEFAULT_FRAME_WIDTH = 400;
     private static int DEFAULT_FRAME_HEIGHT = 500;
@@ -36,6 +34,7 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
     protected static String BUTTON_START_COMMAND = "START GAME";
     protected static String BUTTON_CUSTOM_SOURCE_COMMAND = "CUSTOM";
     protected static String BUTTON_SELECT_AND_UPLOAD_COMMAND = "CHOOSE FILE";
+    protected static String BUTTON_RESET_COMMAND = "RESET";
 
     protected static String BUTTON_FEEDBACK = "BUTTON PRESSED: ";
     protected static String[] DefaultCategories = {"", "COUNTIES","COUNTRIES","CITIES"};
@@ -47,15 +46,23 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
     private JButton chooseFileButton = new JButton(BUTTON_SELECT_AND_UPLOAD_COMMAND);
     private JButton customSourceButton = new JButton(BUTTON_CUSTOM_SOURCE_COMMAND);
     private JButton startGameButton = new JButton(BUTTON_START_COMMAND);
+    private JButton resetButton = new JButton(BUTTON_RESET_COMMAND);
 
     private JComboBox categoriesDropdown = new JComboBox(DefaultCategories);
 
-    private JTextField inputCharacterField = new JTextField("input");
+    private JTextField inputCharacterField = new JTextField("");
     private JTextField outputViewField = new JTextField("output");
 
     private Container wordSourceGrid = new Container();
     private Container gamerInputGrid = new Container();
 
+    String ChosenRandomWord = "";
+    String ChosenWordsDirectory = "";
+    String CurrentOutput = "";
+
+    private int RemaingGuesses;
+
+    private JFileChooser chooser;
 
     public HangmanGamePlayGUI(){
         this.model = new HangmanModel();
@@ -66,9 +73,6 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
         gameFrame.setSize(DEFAULT_FRAME_WIDTH,DEFAULT_FRAME_HEIGHT);
 
         gameFrame.setVisible(true);
-
-        controlPanel = new JPanel();
-        viewPanel = new JPanel();
 
         addActionListenerForButtons(this);
 
@@ -83,6 +87,7 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
         gamerInputGrid.add(advanceButton);
         gamerInputGrid.add(quitButton);
         gamerInputGrid.add(hintButton);
+        gamerInputGrid.add(resetButton);
 
         gameFrame.add(wordSourceGrid,BorderLayout.NORTH);
         gameFrame.add(outputViewField, BorderLayout.CENTER);
@@ -97,7 +102,8 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
         customSourceButton.addActionListener(actionListener);
         advanceButton.addActionListener(actionListener);
         chooseFileButton.addActionListener(actionListener);
-
+        quitButton.addActionListener(actionListener);
+        resetButton.addActionListener(actionListener);
         categoriesDropdown.addActionListener(actionListener);
     }
 
@@ -114,7 +120,6 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
     public void update(Observable observable, Object object) {
         SwingUtilities.invokeLater(new Runnable(){
             public void run(){
-                //outputViewField.setText("skrere");
                 gameFrame.repaint();
             }
         });
@@ -124,27 +129,132 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         if(actionEvent.getSource() == chooseFileButton ) {
             System.out.println(BUTTON_FEEDBACK + chooseFileButton.getLabel());
-            chooseFileButton.setVisible(false);
+            getWordsFromCustomFile();
         }
         if(actionEvent.getSource() == categoriesDropdown){
-            if(categoriesDropdown.getSelectedItem() == DefaultCategories[0]){
-                outputViewField.setText("lollll");
-            }
-            else if(categoriesDropdown.getSelectedItem() == DefaultCategories[1]){
-                System.out.println("Category Selected: "+ DefaultCategories[1]);
-            }
-
+            System.out.println("Category selection: " + categoriesDropdown.getSelectedItem());
+            setWordsCategory();
         }
         if(actionEvent.getSource() == startGameButton ){
-            categoriesDropdown.setVisible(false);
-            chooseFileButton.setVisible(false);
-            startGameButton.setVisible(false);
-
+            System.out.println(BUTTON_FEEDBACK+ startGameButton.getLabel());
+            initGamePlay();
         }
         if(actionEvent.getSource() == advanceButton){
-
+            System.out.println(BUTTON_FEEDBACK+ advanceButton.getLabel());
+            runGamePlay();
         }
         if(actionEvent.getSource() == hintButton){
+            System.out.println(BUTTON_FEEDBACK+ hintButton.getLabel());
+        }
+        if(actionEvent.getSource() == quitButton){
+            System.out.println(BUTTON_FEEDBACK+ quitButton.getLabel());
+            runQuitGameDialog();
+        }
+        if(actionEvent.getSource() == resetButton){
+            System.out.println(BUTTON_FEEDBACK+ resetButton.getLabel());
+            runQuitGameDialog();
+        }
+
+    }
+
+    private String nullCategory(){
+        return "Please Choose a Valid Category or Select Custom Words File to Start the game";
+    }
+    private String getCustomWordsDirectory(){
+        String FilePath = "";
+        chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new java.io.File("."));
+        chooser.setDialogTitle("Choose Words File to Upload");
+        chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        //
+        // disable the "All files" option.
+        //
+        chooser.setAcceptAllFileFilterUsed(true);
+        //
+        if (chooser.showOpenDialog(gameFrame) == JFileChooser.APPROVE_OPTION) {
+            System.out.println("getCurrentDirectory(): "
+                    +  chooser.getCurrentDirectory());
+            FilePath = chooser.getSelectedFile().getPath();
+            System.out.println("getSelectedFile() : "
+                    +  chooser.getSelectedFile());
+        }
+        else {
+            System.out.println("No Selection ");
+        }
+        return FilePath;
+    }
+
+    private void runQuitGameDialog(){
+        Object[] QuitOptions = {"YES", "NO"};
+        int Response = JOptionPane.showOptionDialog(gameFrame, "Are You Sure?", "Warning",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, QuitOptions, QuitOptions[0]);
+        if(Response == JOptionPane.YES_OPTION){
+            gameFrame.dispose();
+            new HangmanGUI();
+        }
+
+    }
+
+    private void getWordsFromCustomFile(){
+        chooseFileButton.setVisible(false);
+        ChosenWordsDirectory = getCustomWordsDirectory();
+        outputViewField.setText(ChosenWordsDirectory);
+        ChosenRandomWord = wController.getWordFromFile(ChosenWordsDirectory);
+    }
+
+    private void setWordsCategory(){
+        if(categoriesDropdown.getSelectedIndex() == 0){
+            outputViewField.setText(nullCategory());
+        }
+        else {
+            ChosenRandomWord = wController.getWordFromCategory(categoriesDropdown.getSelectedIndex());
+        }
+    }
+
+    private void initGamePlay(){
+        CurrentOutput = "";
+        categoriesDropdown.setVisible(false);
+        chooseFileButton.setVisible(false);
+        startGameButton.setVisible(false);
+        outputViewField.setText("Enter a Character");
+        gController = new HangmanGameplayController(ChosenRandomWord);
+        this.RemaingGuesses = gController.getRemainingGuessesGUI();
+
+        CurrentOutput += gController.showWordGUI()+ "\n"
+                + " GUESS-REM: "+ gController.getRemainingGuessesGUI()+"\n"
+                + "Enter a Guess \n";
+        outputViewField.setText(CurrentOutput);
+    }
+    private void runGamePlay(){
+        char UserIn = ' ';
+        String CurrentIn = inputCharacterField.getText();;
+        while(!gController.isGameLostGUI() && !gController.isGameWonGUI()){
+            if((CurrentIn.isEmpty()) ||(CurrentIn.length()>1)){
+                CurrentOutput+= "Guess one char at a time\n";
+            }
+            else {
+                UserIn = CurrentIn.charAt(0);
+                boolean isCorrect = gController.getNextGuessGUI(UserIn);
+
+                if (isCorrect) {
+                    CurrentOutput += "Correct Guess\n";
+                } else if (!isCorrect) {
+                    CurrentOutput += "Wrong Guess!";
+                }
+
+
+                CurrentOutput += gController.showWordGUI() + "\n"
+                        + " GUESS-REM: " + RemaingGuesses + "\n"
+                        + "Enter a Guess \n";
+                outputViewField.setText(CurrentOutput);
+            }
+
+            if(gController.isGameWonGUI()){
+                CurrentOutput += "Game Won\n";
+                outputViewField.setText(CurrentOutput);
+            }
+
 
         }
 
