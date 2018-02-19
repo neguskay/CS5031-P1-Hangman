@@ -197,7 +197,6 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
     }
 
     private void getWordsFromCustomFile(){
-        chooseFileButton.setVisible(false);
         ChosenWordsDirectory = getCustomWordsDirectory();
         outputViewField.setText(ChosenWordsDirectory);
         ChosenRandomWord = wController.getWordFromFile(ChosenWordsDirectory);
@@ -208,6 +207,7 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
             outputViewField.setText(nullCategory());
         }
         else {
+            outputViewField.setText(categoriesDropdown.getSelectedItem().toString());
             ChosenRandomWord = wController.getWordFromCategory(categoriesDropdown.getSelectedIndex());
         }
     }
