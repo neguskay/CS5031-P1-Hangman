@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
-public class HangmanGUI implements Observer, ActionListener{
+public class HangmanGUI implements ActionListener{
 
     private HangmanModelInterface model;
     private HangmanWordsController wController;
@@ -85,7 +85,7 @@ public class HangmanGUI implements Observer, ActionListener{
         hangmanFrame.add(controlPanel, BorderLayout.NORTH);
         hangmanFrame.add(outputViewField,BorderLayout.CENTER);
 
-        ((Observable)model).addObserver(this);
+
     }
 
     private void addActionListenerForButtons(ActionListener actionListener) {
@@ -107,15 +107,7 @@ public class HangmanGUI implements Observer, ActionListener{
         new HangmanGamePlayGUI();
     }
 
-    @Override
-    public void update(Observable observable, Object object) {
-        SwingUtilities.invokeLater(new Runnable(){
-            public void run(){
-                //outputViewField.setText("skrere");
-                hangmanFrame.repaint();
-            }
-        });
-    }
+
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {

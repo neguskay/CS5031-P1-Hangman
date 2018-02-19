@@ -1,8 +1,6 @@
 package uk.ac.standrews.cs5031.Viewer;
 
-import uk.ac.standrews.cs5031.Controller.GameplayControllerInterface;
-import uk.ac.standrews.cs5031.Controller.HangmanGameplayController;
-import uk.ac.standrews.cs5031.Controller.HangmanWordsController;
+import uk.ac.standrews.cs5031.Controller.*;
 import uk.ac.standrews.cs5031.Model.HangmanModel;
 import uk.ac.standrews.cs5031.Model.HangmanModelInterface;
 
@@ -10,14 +8,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Observable;
 import java.util.Observer;
 
-public class HangmanGamePlayGUI implements Observer, ActionListener {
+public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener {
 
     private HangmanModelInterface model;
-    private HangmanWordsController wController = new HangmanWordsController();
-    private GameplayControllerInterface gController;
+    private IHangmanGUIController controller;
 
     private JFrame gameFrame;
 
@@ -50,11 +49,20 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
 
     private JComboBox categoriesDropdown = new JComboBox(DefaultCategories);
 
-    private JTextField inputCharacterField = new JTextField("");
-    private JTextField outputViewField = new JTextField("output");
+    private JTextField inputCharacterField = new JTextField(20);
+    private JTextField gameStatsViewField = new JTextField(20);
+    private JTextField feedBackViewField = new JTextField(20);
+    private JTextField currentOutputViewField ;
 
     private Container wordSourceGrid = new Container();
-    private Container gamerInputGrid = new Container();
+    private Container startButtonGrid = new Container();
+    private Container gameStatsGrid = new Container();
+    private Container outputViewGrid = new Container();
+    private Container gamePlayControlsGrid = new Container();
+
+    private JPanel statsAndFeedbackPanel = new JPanel();
+    private JPanel viewCurrentOutputPanel = new JPanel();
+    private JPanel gamePlayControlsPanel = new JPanel();
 
     String ChosenRandomWord = "";
     String ChosenWordsDirectory = "";
@@ -66,6 +74,7 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
 
     public HangmanGamePlayGUI(){
         this.model = new HangmanModel();
+        this.controller = new HangmanGUIController(1,null);
 
         gameFrame = new JFrame("HANGMAN");
         gameFrame.setLayout(new BorderLayout());
@@ -74,27 +83,51 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
 
         gameFrame.setVisible(true);
 
-        addActionListenerForButtons(this);
 
 
-        wordSourceGrid.setLayout(new GridLayout(2, 2));
+
+        wordSourceGrid.setLayout(new GridLayout(1, 2));
         wordSourceGrid.add(categoriesDropdown);
         wordSourceGrid.add(chooseFileButton);
-        wordSourceGrid.add(startGameButton, BorderLayout.SOUTH);
 
-        gamerInputGrid.setLayout(new GridLayout(2,3));
-        gamerInputGrid.add(inputCharacterField);
-        gamerInputGrid.add(advanceButton);
-        gamerInputGrid.add(quitButton);
-        gamerInputGrid.add(hintButton);
-        gamerInputGrid.add(resetButton);
+        startButtonGrid.setLayout(new GridLayout(1, 1));
+        startButtonGrid.add(startGameButton);
 
-        gameFrame.add(wordSourceGrid,BorderLayout.NORTH);
-        gameFrame.add(outputViewField, BorderLayout.CENTER);
+        gameStatsGrid.setLayout(new GridLayout(5, 3));
+        gameStatsGrid.add(gameStatsViewField,BorderLayout.EAST);
+        gameStatsGrid.add(feedBackViewField,BorderLayout.WEST);
 
-        gameFrame.add(gamerInputGrid,BorderLayout.SOUTH);
 
-        ((Observable)model).addObserver(this);
+        gamePlayControlsGrid.setLayout(new GridLayout(2,3));
+        gamePlayControlsGrid.add(inputCharacterField);
+        gamePlayControlsGrid.add(advanceButton);
+        gamePlayControlsGrid.add(quitButton);
+        gamePlayControlsGrid.add(hintButton);
+        gamePlayControlsGrid.add(resetButton);
+
+        statsAndFeedbackPanel.add(wordSourceGrid);
+        statsAndFeedbackPanel.add(startButtonGrid);
+        statsAndFeedbackPanel.add(gameStatsGrid);
+
+        //currentOutputViewField.setSize(100, 100);
+        currentOutputViewField = new JTextField( 20);
+        viewCurrentOutputPanel.add(currentOutputViewField);
+        currentOutputViewField.setText(""+controller.getCurrentPredictedChars());
+        currentOutputViewField.setEditable(false);
+
+        gamePlayControlsPanel.add(gamePlayControlsGrid);
+
+        gameFrame.getContentPane().add(statsAndFeedbackPanel, BorderLayout.NORTH);
+        gameFrame.getContentPane().add(currentOutputViewField, BorderLayout.CENTER);
+        gameFrame.getContentPane().add(gamePlayControlsPanel, BorderLayout.SOUTH);
+
+        gameFrame.getRootPane().setDefaultButton(advanceButton);
+
+        addActionListenerForButtons(this);
+            ((Observable)controller).addObserver(this);//add controller
+
+        gameFrame.paintAll(gameFrame.getGraphics());
+        gameFrame.pack();
     }
 
     private void addActionListenerForButtons(ActionListener actionListener) {
@@ -105,6 +138,7 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
         quitButton.addActionListener(actionListener);
         resetButton.addActionListener(actionListener);
         categoriesDropdown.addActionListener(actionListener);
+        hintButton.addActionListener(actionListener);
     }
 
 
@@ -117,15 +151,18 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
     }
 
     @Override
-    public void update(Observable observable, Object object) {
+    public void update(Observable arg0, Object arg1) {
         SwingUtilities.invokeLater(new Runnable(){
             public void run(){
+                gameStatsViewField.setText(""+controller.getGameStats());
+                feedBackViewField.setText(""+controller.getFeedbackMessage());
+                currentOutputViewField.setText(controller.getCurrentPredictedChars());
                 gameFrame.repaint();
             }
         });
     }
 
-    @Override
+
     public void actionPerformed(ActionEvent actionEvent) {
         if(actionEvent.getSource() == chooseFileButton ) {
             System.out.println(BUTTON_FEEDBACK + chooseFileButton.getLabel());
@@ -139,12 +176,9 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
             System.out.println(BUTTON_FEEDBACK+ startGameButton.getLabel());
             initGamePlay();
         }
-        if(actionEvent.getSource() == advanceButton){
-            System.out.println(BUTTON_FEEDBACK+ advanceButton.getLabel());
-            runGamePlay();
-        }
         if(actionEvent.getSource() == hintButton){
             System.out.println(BUTTON_FEEDBACK+ hintButton.getLabel());
+            controller.getHint();
         }
         if(actionEvent.getSource() == quitButton){
             System.out.println(BUTTON_FEEDBACK+ quitButton.getLabel());
@@ -154,21 +188,24 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
             System.out.println(BUTTON_FEEDBACK+ resetButton.getLabel());
             runQuitGameDialog();
         }
+        if(actionEvent.getSource() == advanceButton){
+
+                runGamePlay();
+        }
+
 
     }
 
-    private String nullCategory(){
-        return "Please Choose a Valid Category or Select Custom Words File to Start the game";
-    }
+    //private String nullCategory(){
+        //return "Please Choose a Valid Category or Select Custom Words File to Start the game";
+    //}
     private String getCustomWordsDirectory(){
         String FilePath = "";
         chooser = new JFileChooser();
         chooser.setCurrentDirectory(new java.io.File("."));
         chooser.setDialogTitle("Choose Words File to Upload");
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        //
-        // disable the "All files" option.
-        //
+
         chooser.setAcceptAllFileFilterUsed(true);
         //
         if (chooser.showOpenDialog(gameFrame) == JFileChooser.APPROVE_OPTION) {
@@ -193,22 +230,22 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
             gameFrame.dispose();
             new HangmanGUI();
         }
-
     }
 
     private void getWordsFromCustomFile(){
         ChosenWordsDirectory = getCustomWordsDirectory();
-        outputViewField.setText(ChosenWordsDirectory);
-        ChosenRandomWord = wController.getWordFromFile(ChosenWordsDirectory);
+        feedBackViewField.setText(ChosenWordsDirectory);
+        ChosenRandomWord = controller.getWordFromFile(ChosenWordsDirectory);
+
     }
 
     private void setWordsCategory(){
         if(categoriesDropdown.getSelectedIndex() == 0){
-            outputViewField.setText(nullCategory());
+            //outputViewField.setText(nullCategory());
+            controller = new HangmanGUIController(categoriesDropdown.getSelectedIndex(), this.ChosenWordsDirectory);
         }
-        else {
-            outputViewField.setText(categoriesDropdown.getSelectedItem().toString());
-            ChosenRandomWord = wController.getWordFromCategory(categoriesDropdown.getSelectedIndex());
+        else if((categoriesDropdown.getSelectedIndex()>0)&& (categoriesDropdown.getSelectedIndex()<4)){
+            controller = new HangmanGUIController(categoriesDropdown.getSelectedIndex(), null);
         }
     }
 
@@ -217,46 +254,35 @@ public class HangmanGamePlayGUI implements Observer, ActionListener {
         categoriesDropdown.setVisible(false);
         chooseFileButton.setVisible(false);
         startGameButton.setVisible(false);
-        outputViewField.setText("Enter a Character");
-        gController = new HangmanGameplayController(ChosenRandomWord);
-        this.RemaingGuesses = gController.getRemainingGuessesGUI();
 
-        CurrentOutput += gController.showWordGUI()+ "\n"
-                + " GUESS-REM: "+ gController.getRemainingGuessesGUI()+"\n"
-                + "Enter a Guess \n";
-        outputViewField.setText(CurrentOutput);
     }
     private void runGamePlay(){
-        char UserIn = ' ';
-        String CurrentIn = inputCharacterField.getText();;
-        while(!gController.isGameLostGUI() && !gController.isGameWonGUI()){
-            if((CurrentIn.isEmpty()) ||(CurrentIn.length()>1)){
-                CurrentOutput+= "Guess one char at a time\n";
-            }
-            else {
-                UserIn = CurrentIn.charAt(0);
-                boolean isCorrect = gController.getNextGuessGUI(UserIn);
+        System.out.println(BUTTON_FEEDBACK+ advanceButton.getLabel());
+        //currentOutputViewField.setEditable(true);
+        //char UserIn = ' ';
+        inputCharacterField.setEditable(true);
+        String CurrentIn = inputCharacterField.getText();
+        char UserIn = CurrentIn.charAt(0);
 
-                if (isCorrect) {
-                    CurrentOutput += "Correct Guess\n";
-                } else if (!isCorrect) {
-                    CurrentOutput += "Wrong Guess!";
-                }
+        controller.checkSubmittedChar(UserIn);
 
 
-                CurrentOutput += gController.showWordGUI() + "\n"
-                        + " GUESS-REM: " + RemaingGuesses + "\n"
-                        + "Enter a Guess \n";
-                outputViewField.setText(CurrentOutput);
-            }
+    }
 
-            if(gController.isGameWonGUI()){
-                CurrentOutput += "Game Won\n";
-                outputViewField.setText(CurrentOutput);
-            }
+    @Override
+    public void keyTyped(KeyEvent keyEvent) {
 
+    }
 
+    @Override
+    public void keyPressed(KeyEvent keyEvent) {
+        if(keyEvent.getKeyCode() == KeyEvent.VK_ENTER){
+            runGamePlay();
         }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent keyEvent) {
 
     }
 }
