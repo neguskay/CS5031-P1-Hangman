@@ -2,7 +2,7 @@ package uk.ac.standrews.cs5031.Controller;
 
 import uk.ac.standrews.cs5031.External.EasyIn;
 import uk.ac.standrews.cs5031.Model.HangmanModel;
-import uk.ac.standrews.cs5031.Model.HangmanModelInterface;
+import uk.ac.standrews.cs5031.Model.IHangmanModel;
 
 import java.util.ArrayList;
 import java.io.BufferedReader;
@@ -18,13 +18,13 @@ public class HangmanWordsController{
     ArrayList<String> CustomWords = new ArrayList<String>();
 
 
-    private HangmanModelInterface hangmanmodel = new HangmanModel();
+    private IHangmanModel model = new HangmanModel();
 
     public HangmanWordsController(){
-        this.Countries = hangmanmodel.getCountries();
-        this.Counties = hangmanmodel.getCounties();
-        this.Cities= hangmanmodel.getCities();
-        this.CustomWords = hangmanmodel.getCustomWords();
+        this.Countries = model.getCountries();
+        this.Counties = model.getCounties();
+        this.Cities= model.getCities();
+        this.CustomWords = model.getCustomWords();
     }
 
     public  String getWordFromCategory(int category) {

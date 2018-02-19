@@ -2,7 +2,7 @@ package uk.ac.standrews.cs5031.Viewer;
 
 import uk.ac.standrews.cs5031.Controller.*;
 import uk.ac.standrews.cs5031.Model.HangmanModel;
-import uk.ac.standrews.cs5031.Model.HangmanModelInterface;
+import uk.ac.standrews.cs5031.Model.IHangmanModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +15,7 @@ import java.util.Observer;
 
 public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener {
 
-    private HangmanModelInterface model;
+    private IHangmanModel model;
     private IHangmanGUIController controller;
 
     private JFrame gameFrame;

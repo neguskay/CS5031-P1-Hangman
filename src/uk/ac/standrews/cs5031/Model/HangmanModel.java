@@ -3,7 +3,7 @@ package uk.ac.standrews.cs5031.Model;
 import java.util.ArrayList;
 import java.util.Observable;
 
-public class HangmanModel implements HangmanModelInterface {
+public class HangmanModel implements IHangmanModel {
     private static String[] Counties = { "Argyll and Bute", "Caithness",  "Kingdom of Fife",
             "East Lothian", "Highland", "Dumfries and Galloway",
             "Renfrewshire", "Scottish Borders", "Perth and Kinross" };

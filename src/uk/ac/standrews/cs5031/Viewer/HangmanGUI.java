@@ -3,7 +3,7 @@ package uk.ac.standrews.cs5031.Viewer;
 import uk.ac.standrews.cs5031.Controller.HangmanGameplayController;
 import uk.ac.standrews.cs5031.Controller.HangmanWordsController;
 import uk.ac.standrews.cs5031.Model.HangmanModel;
-import uk.ac.standrews.cs5031.Model.HangmanModelInterface;
+import uk.ac.standrews.cs5031.Model.IHangmanModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +14,7 @@ import java.util.Observer;
 
 public class HangmanGUI implements ActionListener{
 
-    private HangmanModelInterface model;
+    private IHangmanModel model;
     private HangmanWordsController wController;
     private HangmanGameplayController gController;
     private HangmanViewer viewer;

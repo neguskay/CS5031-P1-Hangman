@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs5031.Controller;
 
 import uk.ac.standrews.cs5031.Model.HangmanModel;
-import uk.ac.standrews.cs5031.Model.HangmanModelInterface;
+import uk.ac.standrews.cs5031.Model.IHangmanModel;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -37,13 +37,13 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
     String[] Cities;
     ArrayList<String> CustomWords = new ArrayList<String>();
 
-    public HangmanModelInterface hangmanModel = new HangmanModel();
+    private IHangmanModel model = new HangmanModel();
 
     public HangmanGUIController(int ComboBoxIndex, String FileDirectory){
-        this.Countries = hangmanModel.getCountries();
-        this.Counties = hangmanModel.getCounties();
-        this.Cities= hangmanModel.getCities();
-        this.CustomWords = hangmanModel.getCustomWords();
+        this.Countries = model.getCountries();
+        this.Counties = model.getCounties();
+        this.Cities= model.getCities();
+        this.CustomWords = model.getCustomWords();
 
         this.CategoryNumber = ComboBoxIndex;
         this.FileDirectory = FileDirectory;
