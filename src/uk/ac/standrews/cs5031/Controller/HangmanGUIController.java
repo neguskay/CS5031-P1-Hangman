@@ -121,7 +121,7 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
 
     public String setChosenWord(int ComboBoxIndex){
         String Word = "";
-        if(ComboBoxIndex == 0){
+        if((ComboBoxIndex == 0)&& (!(FileDirectory==null))){
             Word = getWordFromFile(FileDirectory);
             System.out.println("Retrieving Chosen Word from file: "+ FileDirectory);
         }else if((ComboBoxIndex > 0)&&(ComboBoxIndex<4)){

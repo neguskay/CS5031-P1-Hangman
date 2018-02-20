@@ -2,7 +2,7 @@ package uk.ac.standrews.cs5031.Controller;
 
 public interface IHangmanGUIController {
     public abstract String getWordFromFile(String FileName);
-
+    public abstract String getWordFromCategory(int Category);
     //public abstract void update();
     public abstract void getHint();
 
