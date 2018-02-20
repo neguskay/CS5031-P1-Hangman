@@ -10,6 +10,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * HangmanGUI Class
+ * Implements Action Listener class for buttons
+ *
+ */
 public class HangmanGUI implements ActionListener{
 
     private IHangmanGUIController controller;
@@ -42,6 +47,11 @@ public class HangmanGUI implements ActionListener{
     private Container textGrid = new Container();
 
 
+    /**
+     * Sets up and initiates the HangmanGUI
+     * Sets the GUI visible
+     * Adds action listeners for the buttons
+     */
     public HangmanGUI(){
         hangmanFrame = new JFrame("HANGMAN");
         hangmanFrame.setLayout(new BorderLayout());
@@ -62,6 +72,10 @@ public class HangmanGUI implements ActionListener{
         hangmanFrame.pack();
     }
 
+    /**
+     * Adds action listener to the buttons
+     * @param actionListener object action listener for buttons on GUI
+     */
     private void addActionListenerForButtons(ActionListener actionListener) {
         newGameDefaultWordsButton.addActionListener(actionListener);
         newGameCustomWordsButton.addActionListener(actionListener);
@@ -69,6 +83,10 @@ public class HangmanGUI implements ActionListener{
     }
 
 
+    /**
+     * Adds all the control elements i.e. buttons, containers.
+     * Also sets layout for the parts
+     */
     private void addControlElements(){
 
         welcomeGrid.setLayout(new GridLayout(5, 4));
@@ -82,6 +100,10 @@ public class HangmanGUI implements ActionListener{
         hangmanFrame.getContentPane().add(controlPanel, BorderLayout.NORTH);
     }
 
+    /**
+     * Adds view fields for text outputs if needed
+     * Sets the layout for the textGrid Container
+     */
     private void addViewElements(){
         textGrid.setLayout(new GridLayout(5, 4));
         //textGrid.setSize(500, 250);
@@ -96,28 +118,31 @@ public class HangmanGUI implements ActionListener{
         hangmanFrame.getContentPane().add(outputViewField,BorderLayout.CENTER);
     }
 
+    /**
+     * @param controller An instance of the HangmanGUIController interface
+     */
     private void initNewGame(IHangmanGUIController controller){
         hangmanFrame.dispose();
         new HangmanGamePlayGUI(controller);
     }
 
 
-
+    /**
+     * Implements button actions after buttons have been clicked
+     * @param actionEvent registers events from action listener
+     */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == newGameDefaultWordsButton ){
-            //outputViewField.setText("2+2 is 4, - 1 that's 3, QUICK MAFS ");
             controller = new HangmanGUIController("1",null );
             initNewGame(controller);
             System.out.println(BUTTON_FEEDBACK+ newGameDefaultWordsButton.getLabel());
         }
         if (actionEvent.getSource() == newGameCustomWordsButton ){
-            //outputViewField.setText("2+2 is 4, - 1 that's 3, QUICK MAFS ");
             controller = new HangmanGUIController("0",null );
             initNewGame(controller);
             System.out.println(BUTTON_FEEDBACK+ newGameCustomWordsButton.getLabel());
         }
-
         if(actionEvent.getSource() == infoButton){
             outputViewField.setText("WELCOME TO HANG MAN");
             System.out.println(BUTTON_FEEDBACK+ infoButton.getLabel());

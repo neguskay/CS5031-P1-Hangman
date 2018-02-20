@@ -13,6 +13,11 @@ import java.awt.event.KeyListener;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * HangmanGamePlayGUI Class
+ * Implements Observer, Action Listener and Key Listener
+ * This sets up and runs the 'Game play' part of the GUI
+ */
 public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener {
 
     private IHangmanModel model;
@@ -77,6 +82,10 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
 
     private JFileChooser chooser;
 
+    /**
+     * Sets up the graphics the GUI
+     * @param controller An instance of the IHangmanGUIController as the controller for this GUI
+     */
     public HangmanGamePlayGUI(IHangmanGUIController controller){
         this.model = new HangmanModel();
         this.controller = controller;
@@ -132,6 +141,10 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         gameFrame.pack();
     }
 
+    /**
+     * Adds Action Listener to all the necessary objects to.
+     * @param actionListener The action listener for all buttons and text areas
+     */
     private void addActionListenerForButtons(ActionListener actionListener) {
         startGameButton.addActionListener(actionListener);
         customSourceButton.addActionListener(actionListener);
@@ -143,15 +156,25 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         hintButton.addActionListener(actionListener);
     }
 
-
+    /**
+     * Adds all the buttons and sets up the layout for all the control elements
+     */
     private void addControlElements(){
 
     }
 
+    /**
+     * Adds all text view areas and sets up their relative layout
+     */
     private void addViewElements(){
 
     }
 
+    /**
+     * The runnable method being implemented to keep the GUI updated
+     * @param arg0
+     * @param arg1
+     */
     @Override
     public void update(Observable arg0, Object arg1) {
         SwingUtilities.invokeLater(new Runnable(){
@@ -164,7 +187,10 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         });
     }
 
-
+    /**
+     * Performs several method calls depending on which buttons have been pressed
+     * @param actionEvent Registers actions such as button clicks
+     */
     public void actionPerformed(ActionEvent actionEvent) {
         if(actionEvent.getSource() == chooseFileButton ) {
             System.out.println(BUTTON_FEEDBACK + chooseFileButton.getLabel());
@@ -198,9 +224,9 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
 
     }
 
-    //private String nullCategory(){
-        //return "Please Choose a Valid Category or Select Custom Words File to Start the game";
-    //}
+    /**Gets a file path from the GUI using the JFileChooser class
+     * @return FilePath The location of the file in the file directories
+     */
     private String getCustomWordsDirectory(){
         String FilePath = "";
         chooser = new JFileChooser();
@@ -223,6 +249,10 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         return FilePath;
     }
 
+    /**
+     * Runs a JOptionPane Dialog to confirm user's request
+     * @param DialogOption an integer that determines what the JOption pane should show.
+     */
     private void runDialog(int DialogOption){
         String DialogMessage ="";
         String DialogTitle = "Game Over Dialog";
@@ -260,6 +290,9 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         }
     }
 
+    /**
+     * Gets a random word from the custom file by calling other methods
+     */
     private void getWordsFromCustomFile(){
         ChosenWordsDirectory = getCustomWordsDirectory();
         feedBackViewField.setText(ChosenWordsDirectory);
@@ -267,10 +300,16 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
 
     }
 
+    /**
+     * Sets the chosen Default category of words array to choose the random word from
+     */
     private void setWordsCategory() {
 
     }
 
+    /**
+     * Initiates the game by disabling some of the buttons
+     */
     private void initGamePlay(){
         CurrentOutput = "";
         categoriesDropdown.setVisible(false);
@@ -278,6 +317,10 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         startGameButton.setVisible(false);
 
     }
+
+    /**
+     * Runs the game's logic
+     */
     private void runGamePlay(){
         System.out.println(BUTTON_FEEDBACK+ advanceButton.getLabel());
         //currentOutputViewField.setEditable(true);
@@ -288,6 +331,10 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         checkSubmittedChar(UserIn);
     }
 
+    /**
+     * checks if a submitted guess character is a valid character
+     * @param userChar the submitted character guess
+     */
     public void checkSubmittedChar(char userChar){
         if (!controller.isGameWon() && !controller.isGameLost()){
             if(controller.isCharCorrect(userChar)){
@@ -311,11 +358,17 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         //update();
     }
 
+    /**
+     * @param keyEvent Listens to keyboard keys if typed
+     */
     @Override
     public void keyTyped(KeyEvent keyEvent) {
 
     }
 
+    /**
+     * @param keyEvent Listens to keyboard keys if pressed
+     */
     @Override
     public void keyPressed(KeyEvent keyEvent) {
         if(keyEvent.getKeyCode() == KeyEvent.VK_ENTER){
@@ -323,6 +376,9 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         }
     }
 
+    /**
+     * @param keyEvent Listens to keyboard keys if released after a press
+     */
     @Override
     public void keyReleased(KeyEvent keyEvent) {
 

@@ -3,6 +3,11 @@ package uk.ac.standrews.cs5031.Model;
 import java.util.ArrayList;
 import java.util.Observable;
 
+/**
+ * Model Class of the MVC of the Hangman game.
+ * Implements the IHangmanModel interface.
+ * Holds the Countries, Counties and Cities Arrays used within the game's logic.
+ */
 public class HangmanModel implements IHangmanModel {
     private static String[] Counties = { "Argyll and Bute", "Caithness",  "Kingdom of Fife",
             "East Lothian", "Highland", "Dumfries and Galloway",
@@ -15,20 +20,32 @@ public class HangmanModel implements IHangmanModel {
 
     private static ArrayList<String> CustomWords = new ArrayList<String>();
 
-
+    /**
+     * @return Countries The Array of Country names
+     */
     public String[] getCountries() {
         return Countries;
     }
+
+    /**
+     * @return Counties The Array of County names
+     */
     public String[] getCounties() {
         return Counties;
     }
+
+    /**
+     * @returnThe Cities Array of names of cities
+     */
     public String[] getCities() {
         return Cities;
     }
 
+    /**
+     * @return CustomWords Array List containing several Custom Words
+     */
     public ArrayList<String> getCustomWords() {
         return CustomWords;
     }
-
 
 }

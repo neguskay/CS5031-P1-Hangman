@@ -2,6 +2,10 @@ package uk.ac.standrews.cs5031.Model;
 
 import java.util.ArrayList;
 
+/**
+ * HangmanModel's interface.
+ * Implemented by HangmanModel Class
+ */
 public interface IHangmanModel {
 
     public abstract String[] getCountries();

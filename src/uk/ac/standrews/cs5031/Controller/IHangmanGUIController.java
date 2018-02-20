@@ -1,5 +1,10 @@
 package uk.ac.standrews.cs5031.Controller;
 
+
+/**
+ * HangmanGUIController's interface.
+ * Implemented by HangmanGUIController Class
+ */
 public interface IHangmanGUIController {
     public abstract String getWordFromFile(String FileName);
     public abstract String getWordFromCategory(int Category);
