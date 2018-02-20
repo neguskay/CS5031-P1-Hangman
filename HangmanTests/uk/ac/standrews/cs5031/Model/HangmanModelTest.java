@@ -9,10 +9,21 @@ import static org.junit.jupiter.api.Assertions.*;
 class HangmanModelTest {
 
     @Test
-    void getCountries() throws Exception{
+    void TestModel() throws Exception{
         HangmanModel hm = new HangmanModel();
+        IHangmanModel ihm = new HangmanModel();
+        if(ihm.getCities().toString() ==hm.getCities().toString())
+        {assert true;}
+        if(ihm.getCounties().toString() ==hm.getCounties().toString())
+        {assert true;}
+        if(ihm.getCountries().toString() ==hm.getCountries().toString())
+        {assert true;}
+        if(ihm.getCustomWords().toString() ==hm.getCustomWords().toString())
+        {assert true;}
 
     }
+
+
 
     @Test
     void getCounties() throws Exception{

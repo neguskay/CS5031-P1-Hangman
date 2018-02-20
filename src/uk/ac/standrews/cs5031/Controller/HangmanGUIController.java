@@ -28,6 +28,7 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
     public static String MESSAGE_WRONG_GUESS = "Wrong Guess!";
     public static String MESSAGE_HINT_GUESS = "Try: ";
     public static String MESSAGE_NO_HINTS_GUESS = "You used all hints!";
+    public static String MESSAGE_GAME_WON_GUESS = "You used all hints!";
 
     public ArrayList<Character> CharsGuessed = new ArrayList<Character>();
     public ArrayList<Character> CharsRemaining = new ArrayList<Character>();
@@ -39,13 +40,13 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
 
     private IHangmanModel model = new HangmanModel();
 
-    public HangmanGUIController(int ComboBoxIndex, String FileDirectory){
+    public HangmanGUIController(String ComboBoxIndex, String FileDirectory){
         this.Countries = model.getCountries();
         this.Counties = model.getCounties();
         this.Cities= model.getCities();
         this.CustomWords = model.getCustomWords();
 
-        this.CategoryNumber = ComboBoxIndex;
+        this.CategoryNumber = Integer.parseInt(ComboBoxIndex);
         this.FileDirectory = FileDirectory;
 
         this.ChosenWord = setChosenWord(CategoryNumber);
@@ -69,8 +70,8 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
         this.CharsGuessed.clear();
 
         for(int i = 0; i < ChosenWord.length(); ++i) {
-            if (!CharsRemaining.contains(ChosenWord.charAt(i))) {
-                this.CharsRemaining.add(ChosenWord.charAt(i));
+            if (!CharsRemaining.contains(ChosenWord.toLowerCase().charAt(i))) {
+                this.CharsRemaining.add(ChosenWord.toLowerCase().charAt(i));
             }
         }
         System.out.println("Characters To Be Guessed: "+CharsRemaining.toString());
@@ -157,7 +158,7 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
     public void updateCurrentPredictedChars(){
         //this.CurrentPredictedChars = "";
         for (int i = 0; i < ChosenWord.length(); ++i) {
-            if (CharsGuessed.contains(ChosenWord.charAt(i))) {
+            if (CharsGuessed.contains(ChosenWord.toLowerCase().charAt(i))) {
                 System.out.print(ChosenWord.charAt(i));
                 this.CurrentPredictedChars += ChosenWord.charAt(i);
             } else {
@@ -208,21 +209,6 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
         return gameLost;
     }
 
-    public void checkSubmittedChar(char userChar){
-        if (!isGameWon() && !isGameLost()){
-            if(isCharCorrect(userChar)){
-                updateFeedbackMessage(MESSAGE_CORRECT_GUESS);
-            }
-            else if (!isCharCorrect(userChar)){
-                this.RemainingGuesses-=1;
-                updateFeedbackMessage(MESSAGE_WRONG_GUESS);
-            }
-
-            updateCurrentPredictedChars();
-            updateGameStats();
-        }
-        update();
-    }
 
     public void getHint(){
         if(!(RemainingHints<1)){
@@ -240,6 +226,10 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
         this.notifyObservers();
     }
 
+    public void decreaseRemainingHints(){
+        this.RemainingGuesses-=1;
+    }
+
     public String getGameStats(){
         return GameStats;
     }
@@ -250,5 +240,33 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
 
     public String getCurrentPredictedChars(){
         return CurrentPredictedChars;
+    }
+
+    public String getChosenWord() {
+        return ChosenWord;
+    }
+
+    public String getFileDirectory() {
+        return FileDirectory;
+    }
+
+    public String getMessageCorrectGuess() {
+        return MESSAGE_CORRECT_GUESS;
+    }
+
+    public String getMessageGameWonGuess() {
+        return MESSAGE_GAME_WON_GUESS;
+    }
+
+    public String getMessageHintGuess() {
+        return MESSAGE_HINT_GUESS;
+    }
+
+    public String getMessageNoHintsGuess() {
+        return MESSAGE_NO_HINTS_GUESS;
+    }
+
+    public String getMessageWrongGuess() {
+        return MESSAGE_WRONG_GUESS;
     }
 }

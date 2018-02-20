@@ -27,6 +27,11 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
     private static int DEFAULT_TEXT_AREA_WIDTH = 100;
     private static int DEFAULT_TEXT_AREA_HEIGHT = 50;
 
+    protected static int DIALOG_GAME_WON_ = 1;
+    protected static int DIALOG_GAME_LOST = 2;
+    protected static int DIALOG_GAME_QUIT = 3;
+    protected static int DIALOG_GAME_RESET = 4;
+
     protected static String BUTTON_QUIT_GAME_COMMAND = "Quit Game";
     protected static String BUTTON_HINT_COMMAND = "Hint/Help";
     protected static String BUTTON_ADVANCE_COMMAND= "SUBMIT";
@@ -72,9 +77,9 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
 
     private JFileChooser chooser;
 
-    public HangmanGamePlayGUI(){
+    public HangmanGamePlayGUI(IHangmanGUIController controller){
         this.model = new HangmanModel();
-        this.controller = new HangmanGUIController(1,null);
+        this.controller = controller;
 
         gameFrame = new JFrame("HANGMAN");
         gameFrame.setLayout(new BorderLayout());
@@ -82,9 +87,6 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         gameFrame.setSize(DEFAULT_FRAME_WIDTH,DEFAULT_FRAME_HEIGHT);
 
         gameFrame.setVisible(true);
-
-
-
 
         wordSourceGrid.setLayout(new GridLayout(1, 2));
         wordSourceGrid.add(categoriesDropdown);
@@ -182,11 +184,11 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         }
         if(actionEvent.getSource() == quitButton){
             System.out.println(BUTTON_FEEDBACK+ quitButton.getLabel());
-            runQuitGameDialog();
+            runDialog(DIALOG_GAME_QUIT);
         }
         if(actionEvent.getSource() == resetButton){
             System.out.println(BUTTON_FEEDBACK+ resetButton.getLabel());
-            runQuitGameDialog();
+            runDialog(DIALOG_GAME_RESET);
         }
         if(actionEvent.getSource() == advanceButton){
 
@@ -221,14 +223,40 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         return FilePath;
     }
 
-    private void runQuitGameDialog(){
+    private void runDialog(int DialogOption){
+        String DialogMessage ="";
+        String DialogTitle = "Game Over Dialog";
+
+        switch (DialogOption){
+            case 1: DialogMessage = "You Won! New Game?";
+                    break;
+            case 2: DialogMessage = "You Lost! NewGame?";
+                    break;
+            case 3: DialogMessage = "Are You Sure?";
+                    break;
+            case 4: DialogMessage = "Are You Sure?";
+                break;
+        }
         Object[] QuitOptions = {"YES", "NO"};
-        int Response = JOptionPane.showOptionDialog(gameFrame, "Are You Sure?", "Warning",
+        int Response = JOptionPane.showOptionDialog(gameFrame, DialogMessage, DialogTitle,
                 JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
                 null, QuitOptions, QuitOptions[0]);
         if(Response == JOptionPane.YES_OPTION){
-            gameFrame.dispose();
-            new HangmanGUI();
+            if((DialogOption == 1)||(DialogOption==2)){
+                gameFrame.dispose();
+                new HangmanGamePlayGUI(new HangmanGUIController("1", null));
+            }
+            if(DialogOption == 3){
+                gameFrame.dispose();
+                new HangmanGUI();
+            }
+            if(DialogOption == 4){
+                gameFrame.dispose();
+                new HangmanGamePlayGUI(new HangmanGUIController("1", null));
+            }
+
+
+
         }
     }
 
@@ -239,14 +267,8 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
 
     }
 
-    private void setWordsCategory(){
-        if(categoriesDropdown.getSelectedIndex() == 0){
-            //outputViewField.setText(nullCategory());
-            controller = new HangmanGUIController(categoriesDropdown.getSelectedIndex(), this.ChosenWordsDirectory);
-        }
-        else if((categoriesDropdown.getSelectedIndex()>0)&& (categoriesDropdown.getSelectedIndex()<4)){
-            controller = new HangmanGUIController(categoriesDropdown.getSelectedIndex(), null);
-        }
+    private void setWordsCategory() {
+
     }
 
     private void initGamePlay(){
@@ -262,11 +284,31 @@ public class HangmanGamePlayGUI implements Observer, ActionListener, KeyListener
         //char UserIn = ' ';
         inputCharacterField.setEditable(true);
         String CurrentIn = inputCharacterField.getText();
-        char UserIn = CurrentIn.charAt(0);
+        char UserIn = CurrentIn.toLowerCase().charAt(0);
+        checkSubmittedChar(UserIn);
+    }
 
-        controller.checkSubmittedChar(UserIn);
+    public void checkSubmittedChar(char userChar){
+        if (!controller.isGameWon() && !controller.isGameLost()){
+            if(controller.isCharCorrect(userChar)){
+                controller.updateFeedbackMessage(controller.getMessageCorrectGuess());
+            }
+            else if (!controller.isCharCorrect(userChar)){
+                controller.decreaseRemainingHints();
+                controller.updateFeedbackMessage(controller.getMessageWrongGuess());
+            }
 
-
+            controller.updateCurrentPredictedChars();
+            controller.updateGameStats();
+        }
+        if(controller.isGameWon()){
+            runDialog(DIALOG_GAME_WON_);
+            
+        }
+        if(controller.isGameLost()){
+            runDialog(DIALOG_GAME_LOST);
+        }
+        //update();
     }
 
     @Override
