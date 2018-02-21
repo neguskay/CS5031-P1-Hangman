@@ -1,12 +1,8 @@
-package uk.ac.standrews.cs5031.Controller;
+package uk.ac.standrews.cs5031.controller;
 
 import org.junit.jupiter.api.Test;
-import uk.ac.standrews.cs5031.Model.HangmanModel;
-import uk.ac.standrews.cs5031.Model.IHangmanModel;
-
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
+import uk.ac.standrews.cs5031.model.HangmanModel;
+import uk.ac.standrews.cs5031.model.IHangmanModel;
 
 class HangmanGUIControllerTest {
     String FileDirectory = "/cs/home/soo3/IdeaProjects/CS5031-P1-Hangman/fruits.txt";
@@ -21,13 +17,13 @@ class HangmanGUIControllerTest {
     String[] FruitsTestArray = {"Satsuma", "Papaya","Cantaloupe","Lemon","Passon_fruit","Huckleberry", "Loquat","Boysenberry","Cherry","Kumquat"};
 
     private IHangmanModel model = new HangmanModel();
-    private IHangmanGUIController controllerFile ;
-    private IHangmanGUIController controllerCounties = new HangmanGUIController("1", null);
-    private IHangmanGUIController controllerCountries = new HangmanGUIController("2", null);
-    private IHangmanGUIController controllerCities = new HangmanGUIController("3", null);
+    private IHangmanGuiController controllerFile ;
+    private IHangmanGuiController controllerCounties = new HangmanGuiController("1", null);
+    private IHangmanGuiController controllerCountries = new HangmanGuiController("2", null);
+    private IHangmanGuiController controllerCities = new HangmanGuiController("3", null);
     @Test
     void testFileRetrieval(){
-        controllerFile = new HangmanGUIController("0", FileDirectory);
+        controllerFile = new HangmanGuiController("0", FileDirectory);
         if (FruitsTestArray.toString().contains(controllerFile.getWordFromFile(FileDirectory))){
             assert true;
         }

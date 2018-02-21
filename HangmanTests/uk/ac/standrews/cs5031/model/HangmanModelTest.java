@@ -1,10 +1,6 @@
-package uk.ac.standrews.cs5031.Model;
+package uk.ac.standrews.cs5031.model;
 
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class HangmanModelTest {
 

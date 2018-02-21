@@ -9,16 +9,18 @@
 //Changed scanner
 */
 
-package uk.ac.standrews.cs5031.HangmanMain;
+package uk.ac.standrews.cs5031.main;
 
-import uk.ac.standrews.cs5031.Viewer.HangmanGUI;
+import uk.ac.standrews.cs5031.viewer.HangmanGui;
 
 public class Hangman {
 
-    public static void main(String[] args){
-
-        //new HangmanViewer();
-        new HangmanGUI();
-    }
+  /**
+   * Runs the main Methos.
+   * @param args null.
+   */
+  public static void main(String[] args) {
+    new HangmanGui();
+  }
 
 }
