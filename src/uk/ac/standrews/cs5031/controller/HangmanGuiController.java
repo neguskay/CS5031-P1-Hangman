@@ -103,7 +103,7 @@ public class HangmanGuiController extends Observable implements IHangmanGuiContr
       }
     }
     System.out.println("Characters To Be Guessed: " + charsRemaining.toString());
-    System.out.println("Characters Guessed: " + charsGuessed.toString() + "check: Is is empty?");
+    System.out.println("Characters Guessed: " + charsGuessed.toString());
     update();
   }
 
@@ -118,6 +118,7 @@ public class HangmanGuiController extends Observable implements IHangmanGuiContr
     System.out.println("Getting word from set category");
     System.out.println();
     String chosenWord = "";
+
     Random random = new Random();
     switch (category) {
       case 1:
@@ -130,7 +131,7 @@ public class HangmanGuiController extends Observable implements IHangmanGuiContr
         chosenWord = cities[random.nextInt(cities.length)];
         break;
       default:
-        System.out.println("This won't hapopen");
+        System.out.println("Choose a category");
         break;
 
     }
@@ -145,7 +146,9 @@ public class HangmanGuiController extends Observable implements IHangmanGuiContr
    * @return a chosen word.
    */
   public String getWordFromFile(String fileName) {
+    Random random = new Random(); //add this as bug fixed
     String line;//change line to a suitable name
+    String retWord = "";
     BufferedReader reader = null;
     try {
       //FileInputStream fis = new FileInputStream(fileName);
@@ -155,7 +158,15 @@ public class HangmanGuiController extends Observable implements IHangmanGuiContr
         customWords.add(line);
       }
       update();
-      return customWords.get((int) (Math.random() * customWords.size()));
+      System.out.println("Total number of words: " + customWords.size());
+      if ((customWords == null) || (customWords.size() < 1 )) {
+        updateFeedbackMessage("File was empty");
+        retWord = null;
+      } else {
+        retWord = customWords.get(random.nextInt(customWords.size()));
+      }
+      update();
+      return retWord;
     } catch (FileNotFoundException exception) {
       System.out.println("File error");
       System.out.println("File Was Not Found");
@@ -217,7 +228,7 @@ public class HangmanGuiController extends Observable implements IHangmanGuiContr
         categoryName = "Cities";
         break;
       default:
-        System.out.println("This should not happen!");
+        System.out.println("Invalid Category!");
         break;
     }
     update();

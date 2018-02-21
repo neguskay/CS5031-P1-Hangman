@@ -15,6 +15,8 @@ public interface IHangmanGuiController {
 
   boolean isCharCorrect(char inputChar);
 
+  int initRemainingGuesses(String chosenWord);
+
   void updateFeedbackMessage(String feedbackmessage);
 
   void decreaseRemainingHints();
