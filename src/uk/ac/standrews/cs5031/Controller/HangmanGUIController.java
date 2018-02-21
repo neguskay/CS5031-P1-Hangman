@@ -9,6 +9,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Random;
+
 /**Controller Class of the MVC
  * Implements the IHangmanGUIController interface
  * Extends the Observable class and updates the GUI classes within the Viewer Package
@@ -26,15 +28,16 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
     public int TotalMadeGuesses;
     public int RemainingHints;
 
-    private static int CategoryNumber;
+    private int CategoryNumber;
 
     public String FileDirectory;
     public String ChosenWord;
-    public static String MESSAGE_CORRECT_GUESS = "Right Guess!";
-    public static String MESSAGE_WRONG_GUESS = "Wrong Guess!";
-    public static String MESSAGE_HINT_GUESS = "Try: ";
-    public static String MESSAGE_NO_HINTS_GUESS = "You used all hints!";
-    public static String MESSAGE_GAME_WON_GUESS = "You used all hints!";
+
+    final static String MESSAGE_CORRECT_GUESS = "Right Guess!";
+    final static String MESSAGE_WRONG_GUESS = "Wrong Guess!";
+    final static String MESSAGE_HINT_GUESS = "Try: ";
+    final static String MESSAGE_NO_HINTS_GUESS = "You used all hints!";
+    final static String MESSAGE_GAME_WON_GUESS = "You used all hints!";
 
     public ArrayList<Character> CharsGuessed = new ArrayList<Character>();
     public ArrayList<Character> CharsRemaining = new ArrayList<Character>();
@@ -107,12 +110,15 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
         System.out.println("Getting word from set category");
         System.out.println();
         String ChosenWord = "";
+        Random random = new Random();
         switch (Category){
-            case 1: ChosenWord = Counties[(int)(Math.random()*9)];
+            case 1: ChosenWord = Counties[random.nextInt(Counties.length)];
                 break;
-            case 2: ChosenWord = Countries[(int)(Math.random()*15)];
+            case 2: ChosenWord = Countries[random.nextInt(Countries.length)];
                 break;
-            case 3: ChosenWord = Cities[(int)(Math.random()*10)];
+            case 3: ChosenWord = Cities[random.nextInt(Cities.length)];
+                break;
+            default: System.out.println("This won't hapopen");
                 break;
 
         }
@@ -181,6 +187,8 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
                 break;
             case 3: CategoryName = "Cities";
                 break;
+            default: System.out.println("This should not happen!");
+                break;
         }
         update();
         return CategoryName;
@@ -203,7 +211,7 @@ public class HangmanGUIController extends Observable implements IHangmanGUIContr
      * shows the 'charcters correctly predicted' and prints '-' to replace those not guessed
      */
     public void updateCurrentPredictedChars(){
-        //this.CurrentPredictedChars = "";
+        this.CurrentPredictedChars = "";
         for (int i = 0; i < ChosenWord.length(); ++i) {
             if (CharsGuessed.contains(ChosenWord.toLowerCase().charAt(i))) {
                 System.out.print(ChosenWord.charAt(i));
